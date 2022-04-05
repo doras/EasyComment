@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="EasyComment.commands.category"
+            name="Easy Comment">
+      </category>
+      <command
+            categoryId="EasyComment.commands.category"
+            id="EasyComment.commands.addCmntCurrElemCommand"
+            name="Add Comment to Current Element">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="easycomment.handlers.AddCmntCurrElemHandler"
+            commandId="EasyComment.commands.addCmntCurrElemCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="EasyComment.commands.addCmntCurrElemCommand"
+            contextId="org.eclipse.ui.textEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+M2+J">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="EasyComment.menus.mainMenu"
+               label="Easy Comment"
+               mnemonic="E">
+            <command
+                  commandId="EasyComment.commands.addCmntCurrElemCommand"
+                  id="EasyComment.menus.addCmntCurrElemCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+         <separator
+               name="EasyComment.separator0"
+               visible="true">
+         </separator>
+      </menuContribution>
+   </extension>
+
+</plugin>
