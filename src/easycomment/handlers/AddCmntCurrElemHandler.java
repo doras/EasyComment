@@ -1,5 +1,6 @@
 package easycomment.handlers;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -10,6 +11,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorInput;
@@ -20,7 +23,10 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.osgi.service.prefs.Preferences;
 
+import easycomment.preferences.EasyCommentPlugin;
+import easycomment.preferences.PreferenceConstants;
 import easycomment.util.XMLReadUtil;
 
 /**
@@ -74,7 +80,13 @@ public class AddCmntCurrElemHandler extends AbstractHandler {
 					int lineNumber = document.getLineOfOffset(offset);
 					int startLine = textSelection.getStartLine();
 
-					testMessage = textSelection.getText() + "\n" + lineNumber + ":" + offset + "\n" + startLine;
+//					testMessage = textSelection.getText() + "\n" + lineNumber + ":" + offset + "\n" + startLine;
+
+
+					InputStream is = file.getContents();
+					int lineNo = XMLReadUtil.getLineNoOfCurrentElement(is, startLine) - 1;
+					testMessage = String.valueOf(lineNo);
+//					document.replace(document.getLineOffset(lineNo), 0, commentString);
 				} catch(Exception e) {
 					testMessage = e.toString();
 				}
@@ -86,7 +98,9 @@ public class AddCmntCurrElemHandler extends AbstractHandler {
 				String commentString =
 					"\t<!--\n"
 					+ "\t설명: 쿼리설명\n"
-					+ "\t작성자: 작성자명\n"
+					+ "\t작성자: "
+						+EasyCommentPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.AUTHOR_IN_COMMENT)
+						+"\n"
 					+ "\t최초작성일: "+dateFormat.format(today)+"\n"
 					+ "\t수정일\t\t\t수정자\t\t수정내용\n"
 					+ "\t=====================================\n"
@@ -107,7 +121,7 @@ public class AddCmntCurrElemHandler extends AbstractHandler {
 					IDocument document = provider.getDocument(editor.getEditorInput());
 					int startLine = textSelection.getStartLine();
 
-					InputStream is = file.getContents();
+					InputStream is = new ByteArrayInputStream(document.get().getBytes());
 					int lineNo = XMLReadUtil.getLineNoOfCurrentElement(is, startLine) - 1;
 					document.replace(document.getLineOffset(lineNo), 0, commentString);
 

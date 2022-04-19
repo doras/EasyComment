@@ -30,24 +30,17 @@
       </key>
    </extension>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-         <menu
-               id="EasyComment.menus.mainMenu"
-               label="Easy Comment"
-               mnemonic="E">
-            <command
-                  commandId="EasyComment.commands.addCmntCurrElemCommand"
-                  id="EasyComment.menus.addCmntCurrElemCommand"
-                  mnemonic="S">
-            </command>
-         </menu>
-         <separator
-               name="EasyComment.separator0"
-               visible="true">
-         </separator>
-      </menuContribution>
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="easycomment.preferences.EasyCommentPreferencePage"
+            id="EasyCommentPreferencePage"
+            name="Easy Comment">
+      </page>
    </extension>
-
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="easycomment.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 </plugin>
